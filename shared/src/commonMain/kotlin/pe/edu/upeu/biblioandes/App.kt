@@ -19,11 +19,25 @@ import org.jetbrains.compose.resources.painterResource
 import biblioandes.shared.generated.resources.Res
 import biblioandes.shared.generated.resources.compose_multiplatform
 
+import org.koin.compose.KoinContext
+import org.koin.core.context.startKoin
+import pe.edu.upeu.biblioandes.di.appModule
+
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
-        var showContent by remember { mutableStateOf(false) }
+    // Inicializar Koin si no se ha iniciado
+    LaunchedEffect(Unit) {
+        if (org.koin.core.context.GlobalContext.getOrNull() == null) {
+            startKoin {
+                modules(appModule)
+            }
+        }
+    }
+    
+    KoinContext {
+        MaterialTheme {
+            var showContent by remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.primaryContainer)
@@ -45,5 +59,6 @@ fun App() {
                 }
             }
         }
+    }
     }
 }
