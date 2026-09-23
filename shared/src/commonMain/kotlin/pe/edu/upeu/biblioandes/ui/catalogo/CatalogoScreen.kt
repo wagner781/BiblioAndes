@@ -71,24 +71,40 @@ fun CatalogoScreen(
     }
 }
 
+import androidx.compose.material.icons.filled.Book
+
 @Composable
 fun LibroItem(libro: Libro, onClick: () -> Unit) {
-    Card(
+    ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
+        colors = CardDefaults.elevatedCardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = libro.titulo, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "Autor: ${libro.autor}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Categoría: ${libro.categoria}", style = MaterialTheme.typography.bodySmall)
-            Spacer(modifier = Modifier.height(8.dp))
-            val disponibilidadText = if (libro.ejemplaresDisponibles > 0) "${libro.ejemplaresDisponibles} disponibles" else "No disponible"
-            val color = if (libro.ejemplaresDisponibles > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
-            Text(text = disponibilidadText, style = MaterialTheme.typography.labelMedium, color = color)
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Book,
+                contentDescription = "Libro",
+                modifier = Modifier.size(40.dp).padding(end = 12.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(text = libro.titulo, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(text = "Autor: ${libro.autor}", style = MaterialTheme.typography.bodyMedium)
+                Text(text = "Categoría: ${libro.categoria}", style = MaterialTheme.typography.bodySmall)
+                Spacer(modifier = Modifier.height(8.dp))
+                val disponibilidadText = if (libro.ejemplaresDisponibles > 0) "${libro.ejemplaresDisponibles} disponibles" else "No disponible"
+                val color = if (libro.ejemplaresDisponibles > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                Text(text = disponibilidadText, style = MaterialTheme.typography.labelMedium, color = color)
+            }
         }
     }
 }
