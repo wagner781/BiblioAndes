@@ -8,6 +8,8 @@ import pe.edu.upeu.biblioandes.domain.usecase.ObtenerCatalogoUseCase
 import pe.edu.upeu.biblioandes.domain.usecase.ObtenerPrestamosUseCase
 import pe.edu.upeu.biblioandes.domain.usecase.SolicitarPrestamoUseCase
 import pe.edu.upeu.biblioandes.ui.catalogo.CatalogoViewModel
+import pe.edu.upeu.biblioandes.ui.detalle.DetalleViewModel
+import pe.edu.upeu.biblioandes.ui.prestamos.PrestamosViewModel
 
 val appModule = module {
     single<BibliotecaRepository> { BibliotecaRepositoryFake() }
@@ -17,4 +19,6 @@ val appModule = module {
     factory { SolicitarPrestamoUseCase(get()) }
     
     viewModelOf(::CatalogoViewModel)
+    viewModelOf(::DetalleViewModel)
+    viewModelOf(::PrestamosViewModel)
 }
