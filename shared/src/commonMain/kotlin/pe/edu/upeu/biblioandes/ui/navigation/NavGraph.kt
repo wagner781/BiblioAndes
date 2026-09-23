@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.upeu.biblioandes.ui.catalogo.CatalogoScreen
 
 @Composable
 fun AppNavGraph() {
@@ -18,9 +19,11 @@ fun AppNavGraph() {
         startDestination = "catalogo"
     ) {
         composable("catalogo") {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Pantalla de Catálogo (Placeholder)")
-            }
+            CatalogoScreen(
+                onNavigateToDetalle = { libroId ->
+                    navController.navigate("detalle/$libroId")
+                }
+            )
         }
         composable("detalle/{libroId}") { backStackEntry ->
             val libroId = backStackEntry.arguments?.getString("libroId")
