@@ -12,6 +12,8 @@ import androidx.navigation.compose.rememberNavController
 import pe.edu.upeu.biblioandes.ui.catalogo.CatalogoScreen
 import pe.edu.upeu.biblioandes.ui.detalle.DetalleScreen
 
+import pe.edu.upeu.biblioandes.ui.prestamos.PrestamosScreen
+
 @Composable
 fun AppNavGraph() {
     val navController = rememberNavController()
@@ -23,6 +25,9 @@ fun AppNavGraph() {
             CatalogoScreen(
                 onNavigateToDetalle = { libroId ->
                     navController.navigate("detalle/$libroId")
+                },
+                onNavigateToPrestamos = {
+                    navController.navigate("prestamos")
                 }
             )
         }
@@ -30,6 +35,11 @@ fun AppNavGraph() {
             val libroId = backStackEntry.arguments?.getString("libroId")?.toIntOrNull() ?: 0
             DetalleScreen(
                 libroId = libroId,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable("prestamos") {
+            PrestamosScreen(
                 onNavigateBack = { navController.popBackStack() }
             )
         }

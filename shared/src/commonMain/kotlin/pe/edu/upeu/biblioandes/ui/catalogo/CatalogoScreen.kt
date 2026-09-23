@@ -16,10 +16,14 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import pe.edu.upeu.biblioandes.domain.model.Libro
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.List
+
 @OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 fun CatalogoScreen(
     onNavigateToDetalle: (Int) -> Unit,
+    onNavigateToPrestamos: () -> Unit,
     viewModel: CatalogoViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -28,6 +32,11 @@ fun CatalogoScreen(
         topBar = {
             TopAppBar(
                 title = { Text("Catálogo de Libros") },
+                actions = {
+                    IconButton(onClick = onNavigateToPrestamos) {
+                        Icon(Icons.Filled.List, contentDescription = "Mis Préstamos")
+                    }
+                },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
