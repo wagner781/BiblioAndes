@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+﻿import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -46,6 +46,9 @@ kotlin {
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
+            implementation(libs.jetbrains.navigation.compose)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
@@ -63,3 +66,4 @@ kotlin {
 dependencies {
     androidRuntimeClasspath(libs.compose.uiTooling)
 }
+
