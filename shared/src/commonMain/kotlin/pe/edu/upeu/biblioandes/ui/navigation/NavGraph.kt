@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import pe.edu.upeu.biblioandes.ui.catalogo.CatalogoScreen
+import pe.edu.upeu.biblioandes.ui.detalle.DetalleScreen
 
 @Composable
 fun AppNavGraph() {
@@ -26,10 +27,11 @@ fun AppNavGraph() {
             )
         }
         composable("detalle/{libroId}") { backStackEntry ->
-            val libroId = backStackEntry.arguments?.getString("libroId")
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Pantalla de Detalle (Placeholder) - Libro: $libroId")
-            }
+            val libroId = backStackEntry.arguments?.getString("libroId")?.toIntOrNull() ?: 0
+            DetalleScreen(
+                libroId = libroId,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
     }
 }
