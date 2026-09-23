@@ -1,4 +1,10 @@
 package pe.edu.upeu.biblioandes.domain.usecase
 
-class ObtenerCatalogoUseCase {
+import pe.edu.upeu.biblioandes.domain.repository.BibliotecaRepository
+import pe.edu.upeu.biblioandes.domain.model.Libro
+
+class ObtenerCatalogoUseCase(private val repository: BibliotecaRepository) {
+    suspend operator fun invoke(): List<Libro> {
+        return repository.obtenerCatalogo()
+    }
 }
