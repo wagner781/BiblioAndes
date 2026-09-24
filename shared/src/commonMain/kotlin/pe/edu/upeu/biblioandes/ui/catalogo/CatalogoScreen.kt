@@ -16,9 +16,6 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 import pe.edu.upeu.biblioandes.domain.model.Libro
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.List
-
 @OptIn(ExperimentalMaterial3Api::class, KoinExperimentalAPI::class)
 @Composable
 fun CatalogoScreen(
@@ -34,7 +31,7 @@ fun CatalogoScreen(
                 title = { Text("Catálogo de Libros") },
                 actions = {
                     IconButton(onClick = onNavigateToPrestamos) {
-                        Icon(Icons.Filled.List, contentDescription = "Mis Préstamos")
+                        Text("📋", style = MaterialTheme.typography.titleLarge)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -71,8 +68,6 @@ fun CatalogoScreen(
     }
 }
 
-import androidx.compose.material.icons.filled.Book
-
 @Composable
 fun LibroItem(libro: Libro, onClick: () -> Unit) {
     ElevatedCard(
@@ -89,11 +84,10 @@ fun LibroItem(libro: Libro, onClick: () -> Unit) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Filled.Book,
-                contentDescription = "Libro",
-                modifier = Modifier.size(40.dp).padding(end = 12.dp),
-                tint = MaterialTheme.colorScheme.primary
+            Text(
+                text = "📚",
+                style = MaterialTheme.typography.headlineLarge,
+                modifier = Modifier.padding(end = 12.dp)
             )
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = libro.titulo, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)

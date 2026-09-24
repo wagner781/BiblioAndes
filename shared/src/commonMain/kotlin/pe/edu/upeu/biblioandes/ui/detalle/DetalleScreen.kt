@@ -1,8 +1,6 @@
 package pe.edu.upeu.biblioandes.ui.detalle
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +32,7 @@ fun DetalleScreen(
                 title = { Text("Detalle del Libro") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                        Text("<", style = MaterialTheme.typography.titleLarge)
                     }
                 }
             )
@@ -66,7 +64,7 @@ fun DetalleScreen(
                         Text(text = "Categoría: ${libro.categoria}", style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(text = "Descripción:", style = MaterialTheme.typography.titleSmall)
-                        Text(text = libro.descripcion, style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Sin descripción", style = MaterialTheme.typography.bodyMedium)
                         Spacer(modifier = Modifier.height(16.dp))
                         
                         val disponibilidadText = if (libro.ejemplaresDisponibles > 0) "${libro.ejemplaresDisponibles} disponibles" else "No disponible"
@@ -87,7 +85,7 @@ fun DetalleScreen(
                                 Text(text = pState.mensaje, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
                             }
                             is PrestamoActionState.Exito -> {
-                                Text(text = "¡Préstamo exitoso! A devolver el ${pState.prestamo.fechaDevolucion}", color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+                                Text(text = "¡Préstamo exitoso! A devolver el ${pState.prestamo.fechaLimite}", color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
                             }
                             else -> {}
                         }

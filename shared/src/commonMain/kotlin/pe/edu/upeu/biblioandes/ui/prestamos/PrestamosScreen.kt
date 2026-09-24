@@ -3,8 +3,6 @@ package pe.edu.upeu.biblioandes.ui.prestamos
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +29,7 @@ fun PrestamosScreen(
                 title = { Text("Mis Préstamos") },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
+                        Text("<", style = MaterialTheme.typography.titleLarge)
                     }
                 }
             )
@@ -96,10 +94,10 @@ fun PrestamoItem(prestamo: Prestamo) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "ID Libro: ${prestamo.libroId}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(text = "Libro: ${prestamo.libro.titulo}", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = "Fecha Préstamo: ${prestamo.fechaPrestamo}", style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Fecha Devolución: ${prestamo.fechaDevolucion}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+            Text(text = "Fecha Límite: ${prestamo.fechaLimite}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
         }
     }
 }

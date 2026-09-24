@@ -12,12 +12,14 @@ import pe.edu.upeu.biblioandes.ui.navigation.AppNavGraph
 @Composable
 @Preview
 fun App() {
-    // Inicializar Koin si no se ha iniciado
+    // Inicializar Koin de manera segura
     LaunchedEffect(Unit) {
-        if (org.koin.core.context.GlobalContext.getOrNull() == null) {
+        try {
             startKoin {
                 modules(appModule)
             }
+        } catch (e: Exception) {
+            // Koin ya inicializado
         }
     }
     
