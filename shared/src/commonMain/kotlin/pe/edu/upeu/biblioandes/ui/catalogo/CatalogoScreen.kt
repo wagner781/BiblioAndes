@@ -24,6 +24,9 @@ fun CatalogoScreen(
     viewModel: CatalogoViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val searchQuery by viewModel.searchQuery.collectAsState()
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val categorias = listOf("Programación", "Matemática", "Redes", "Gestión", "Literatura")
 
     Scaffold(
         topBar = {
@@ -41,24 +44,53 @@ fun CatalogoScreen(
             )
         }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
-            contentAlignment = Alignment.Center
-        ) {
-            when (val state = uiState) {
-                is CatalogoUiState.Cargando -> {
-                    CircularProgressIndicator()
+        Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            OutlinedTextField(
+                value = searchQuery,
+                onValueChange = { viewModel.updateSearchQuery(it) },
+                label = { Text("Buscar por título o autor") },
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)
+            )
+
+            androidx.compose.foundation.lazy.LazyRow(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                item {
+                    FilterChip(
+                        selected = selectedCategory == null,
+                        onClick = { viewModel.selectCategory(null) },
+                        label = { Text("Todos") }
+                    )
                 }
-                is CatalogoUiState.Error -> {
-                    Text(text = "Error: ${state.mensaje}", color = MaterialTheme.colorScheme.error)
+                items(categorias) { cat ->
+                    FilterChip(
+                        selected = selectedCategory == cat,
+                        onClick = { viewModel.selectCategory(cat) },
+                        label = { Text(cat) }
+                    )
                 }
-                is CatalogoUiState.Exito -> {
-                    if (state.libros.isEmpty()) {
-                        Text("No hay libros disponibles en el catálogo.")
-                    } else {
-                        LazyColumn(modifier = Modifier.fillMaxSize()) {
-                            items(state.libros) { libro ->
-                                LibroItem(libro = libro, onClick = { onNavigateToDetalle(libro.id) })
+            }
+
+            Box(
+                modifier = Modifier.weight(1f).fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                when (val state = uiState) {
+                    is CatalogoUiState.Cargando -> {
+                        CircularProgressIndicator()
+                    }
+                    is CatalogoUiState.Error -> {
+                        Text(text = "Error: ${state.mensaje}", color = MaterialTheme.colorScheme.error)
+                    }
+                    is CatalogoUiState.Exito -> {
+                        if (state.libros.isEmpty()) {
+                            Text("No hay libros disponibles en el catálogo.")
+                        } else {
+                            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                                items(state.libros) { libro ->
+                                    LibroItem(libro = libro, onClick = { onNavigateToDetalle(libro.id) })
+                                }
                             }
                         }
                     }

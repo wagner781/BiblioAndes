@@ -63,8 +63,9 @@ fun DetalleScreen(
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(text = "Categoría: ${libro.categoria}", style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Descripción:", style = MaterialTheme.typography.titleSmall)
-                        Text(text = "Sin descripción", style = MaterialTheme.typography.bodyMedium)
+                        Text(text = "Año de publicación: ${libro.anio}", style = MaterialTheme.typography.bodyLarge)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(text = "Sede: ${libro.sede}", style = MaterialTheme.typography.bodyLarge)
                         Spacer(modifier = Modifier.height(16.dp))
                         
                         val disponibilidadText = if (libro.ejemplaresDisponibles > 0) "${libro.ejemplaresDisponibles} disponibles" else "No disponible"

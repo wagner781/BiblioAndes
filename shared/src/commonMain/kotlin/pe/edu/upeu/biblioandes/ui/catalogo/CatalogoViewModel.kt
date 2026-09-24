@@ -22,16 +22,44 @@ class CatalogoViewModel(
     private val _uiState = MutableStateFlow<CatalogoUiState>(CatalogoUiState.Cargando)
     val uiState: StateFlow<CatalogoUiState> = _uiState.asStateFlow()
 
+    private var todosLosLibros = listOf<Libro>()
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private val _selectedCategory = MutableStateFlow<String?>(null)
+    val selectedCategory: StateFlow<String?> = _selectedCategory.asStateFlow()
+
     init {
         cargarCatalogo()
+    }
+
+    fun updateSearchQuery(query: String) {
+        _searchQuery.value = query
+        applyFilters()
+    }
+
+    fun selectCategory(category: String?) {
+        _selectedCategory.value = category
+        applyFilters()
+    }
+
+    private fun applyFilters() {
+        val q = _searchQuery.value.lowercase()
+        val c = _selectedCategory.value
+        val filtrados = todosLosLibros.filter { libro ->
+            val matchCategory = c == null || libro.categoria == c
+            val matchQuery = libro.titulo.lowercase().contains(q) || libro.autor.lowercase().contains(q)
+            matchCategory && matchQuery
+        }
+        _uiState.value = CatalogoUiState.Exito(filtrados)
     }
 
     private fun cargarCatalogo() {
         viewModelScope.launch {
             try {
                 _uiState.value = CatalogoUiState.Cargando
-                val libros = obtenerCatalogoUseCase()
-                _uiState.value = CatalogoUiState.Exito(libros)
+                todosLosLibros = obtenerCatalogoUseCase()
+                applyFilters()
             } catch (e: Exception) {
                 _uiState.value = CatalogoUiState.Error(e.message ?: "Error desconocido")
             }
