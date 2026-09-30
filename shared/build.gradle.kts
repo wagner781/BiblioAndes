@@ -19,7 +19,7 @@ kotlin {
     }
     
     android {
-       namespace = "pe.edu.upeu.biblioandes.shared"
+       namespace = "pe.edu.upeu.bibliomobil.shared"
        compileSdk = libs.versions.android.compileSdk.get().toInt()
        minSdk = libs.versions.android.minSdk.get().toInt()
     
@@ -45,17 +45,24 @@ kotlin {
             implementation(libs.compose.uiTooling)
         }
         commonMain.dependencies {
+            // Se expone porque los puntos de entrada de cada plataforma consumen tipos de Koin definidos en shared.
+            api(libs.koin.core)
+            // Se expone porque las pantallas consumidoras resuelven ViewModels mediante la API Compose de Koin.
+            api(libs.koin.compose)
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)
             implementation(libs.compose.material3)
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
+            implementation(libs.compose.material.icons.extended)
+            implementation(libs.navigation.compose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
+            implementation(libs.kotlinx.coroutines.test)
         }
     }
 }
