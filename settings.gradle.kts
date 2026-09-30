@@ -1,4 +1,4 @@
-rootProject.name = "BiblioAndes"
+rootProject.name = "BiblioMobil"
 
 pluginManagement {
     repositories {
