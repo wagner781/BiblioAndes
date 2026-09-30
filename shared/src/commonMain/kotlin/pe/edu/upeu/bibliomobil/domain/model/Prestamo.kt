@@ -1,9 +1,8 @@
 package pe.edu.upeu.bibliomobil.domain.model
 
 data class Prestamo(
- val id: Int,
- val libro: Libro,
- val fechaPrestamo: String,
- val fechaLimite: String,
- val estado: EstadoPrestamo
+    val id: Long,
+    val lector: Lector,
+    val detalles: List<DetallePrestamo>,
+    val estado: EstadoPrestamo,
 )
