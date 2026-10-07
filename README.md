@@ -1,31 +1,74 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+# BiblioAndes
 
-* [/iosApp](./iosApp/iosApp) contains an iOS application. Even if you’re sharing your UI with Compose Multiplatform,
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+Aplicación Kotlin Multiplatform para consultar el catálogo de una biblioteca, solicitar préstamos y revisar fechas de devolución. Android e iOS comparten dominio, datos, ViewModels y UI con Compose Multiplatform.
 
-* [/shared](./shared/src) is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - [commonMain](./shared/src/commonMain/kotlin) is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    the [iosMain](./shared/src/iosMain/kotlin) folder would be the right place for such calls.
-    Similarly, if you want to edit the Desktop (JVM) specific part, the [jvmMain](./shared/src/jvmMain/kotlin)
-    folder is the appropriate location.
+## Alcance de esta versión
 
-### Running the apps
+- Inicio con saludo, préstamo de vencimiento más próximo y accesos rápidos.
+- Catálogo de 12 libros con búsqueda sin distinción de mayúsculas ni tildes y filtro por categoría.
+- Detalle del libro y confirmación de solicitud.
+- Préstamos ordenados por fecha límite y filtrados por estado.
+- Perfil del estudiante y tema claro/oscuro inmediato.
+- Navegación inferior con exactamente Inicio, Catálogo y Préstamos; Perfil se abre desde la barra superior.
+- Datos exclusivamente en memoria, sin servicios web ni base de datos.
 
-Use the run configurations provided by the run widget in your IDE's toolbar. You can also use these commands and options:
+## Arquitectura
 
-- Android app: `./gradlew :androidApp:assembleDebug`
-- iOS app: open the [/iosApp](./iosApp) directory in Xcode and run it from there.
+El código compartido se encuentra en `shared/src/commonMain/kotlin/pe/edu/upeu/biblioandes`:
 
-### Running tests
+```text
+data/
+  local/          Datos simulados y fecha por plataforma
+  repository/     Implementación en memoria
+domain/
+  model/          Libro, Estudiante, Prestamo y EstadoPrestamo
+  repository/     Contrato intercambiable
+  usecase/        Casos de uso y reglas de negocio
+  util/           Cálculos de fechas
+presentation/
+  inicio/
+  catalogo/
+  detalle/
+  prestamos/
+  perfil/
+  navigation/
+  theme/
+di/               Módulo común de Koin
+```
 
-Use the run button in your IDE's editor gutter, or run tests using Gradle tasks:
+La UI depende de casos de uso; los casos de uso dependen de `BibliotecaRepository`. Para reemplazar los datos simulados por otra fuente se crea una nueva implementación del contrato y se cambia su registro en `AppModule`, sin modificar ViewModels ni pantallas.
 
-- Android tests: `./gradlew :shared:testAndroidHostTest`
-- iOS tests: `./gradlew :shared:iosSimulatorArm64Test`
+## Reglas de negocio
 
----
+- RN-01: un estudiante puede tener como máximo tres préstamos activos.
+- RN-02: no se puede solicitar un libro sin ejemplares disponibles.
+- RN-03: un préstamo nuevo dura siete días; los préstamos activos se recalculan con la fecha del dispositivo.
+- RN-04: cualquier préstamo vencido bloquea una nueva solicitud.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+`BibliotecaRepositoryFake` mantiene una copia mutable de los libros y préstamos. Al registrar una solicitud reduce una existencia y guarda el nuevo préstamo bajo exclusión mutua. El catálogo incluye un indicador `simularErrorCatalogo` para probar su estado de error.
+
+## Ejecución
+
+Requisitos: JDK 11 o superior, Android SDK configurado y, para iOS, macOS con Xcode.
+
+```bash
+# Compilar APK Android
+./gradlew :androidApp:assembleDebug
+
+# Ejecutar las pruebas compartidas disponibles en el host
+./gradlew :shared:allTests
+```
+
+Para iOS, abrir `iosApp/iosApp.xcodeproj` en Xcode y ejecutar el esquema `iosApp`. Koin se inicializa desde `BiblioAndesApplication` en Android y desde `MainViewController` en iOS.
+
+## Pruebas
+
+Las pruebas de `shared/src/commonTest` cubren:
+
+- cálculo de fechas y transición a vencido;
+- persistencia en memoria y reducción de existencias;
+- error simulado del catálogo;
+- RN-01, RN-02, RN-03 y RN-04;
+- búsqueda sin tildes, filtros de préstamos y actualización del detalle.
+
+Las pruebas de simulador iOS se compilan en Windows, pero solo se ejecutan en macOS.
